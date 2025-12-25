@@ -2,123 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register Complaint | CivicFix</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You | CivicFix</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f8fc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #f7f8fc; 
+      margin: 0; 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh; 
+      justify-content: center; 
+      align-items: center; 
     }
-    .box {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    .container { 
+      background: white; 
+      padding: 40px; 
+      border-radius: 12px; 
+      text-align: center; 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1); 
+      max-width: 500px; 
+      width: 90%; 
     }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+    h1 { color: #333; }
+    p { font-size: 18px; margin: 10px 0; }
+    img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
+    .detail { text-align: left; margin-top: 20px; background: #f0f0f0; padding: 15px; border-radius: 8px; }
+    .detail p { margin: 5px 0; font-weight: bold; }
+    a { 
+      display: inline-block; 
+      margin-top: 20px; 
+      text-decoration: none; 
+      padding: 10px 20px; 
+      background: #514f52; 
+      color: white; 
+      border-radius: 8px; 
     }
-    button {
-      background: #514f52;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    img {
-      max-width: 100%;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
+    a:hover { background: #333; }
   </style>
 </head>
 <body>
-  <div class="box" id="form-box">
-    <h2>Register Complaint</h2>
+  <div class="container">
+    <h1>Thank You for Complaining!</h1>
+    <p>Your complaint has been registered successfully.</p>
+    <p>Your issue will be addressed soon.</p>
+    <img id="complaintImg" src="" alt="Uploaded Complaint Photo">
+    
+    <div class="detail">
+      <p><strong>Title:</strong> <span id="complaintTitle"></span></p>
+      <p><strong>Category:</strong> <span id="complaintCategory"></span></p>
+      <p><strong>Description:</strong> <span id="complaintDesc"></span></p>
+      <p><strong>Pincode:</strong> <span id="complaintPincode"></span></p>
+      <p><strong>Location:</strong> <span id="complaintLoc"></span></p>
+    </div>
 
-    <input id="title" placeholder="Complaint Title" required>
-    <select id="category">
-      <option>Road Issue</option>
-      <option>Water Problem</option>
-      <option>Electricity</option>
-      <option>Cyber Crime</option>
-    </select>
-    <textarea id="description" placeholder="Description"></textarea>
-    <input id="pincode" placeholder="Pincode">
-    <input id="location" placeholder="Location">
-    <input id="photo" type="file" accept="image/*">
-
-    <button onclick="submitComplaint()">Submit</button>
-  </div>
-
-  <div class="box" id="thankyou-box" style="display:none;">
-    <h2>Complaint Submitted Successfully!</h2>
-    <div id="submitted-data"></div>
-    <button onclick="goBack()">Submit Another Complaint</button>
+    <a href="citizen-dashboard.html">Register Another Complaint</a>
+    <a href="landingpage.html">Back</a>
   </div>
 
   <script>
-    function submitComplaint() {
-      const title = document.getElementById("title").value.trim();
-      const category = document.getElementById("category").value;
-      const description = document.getElementById("description").value.trim();
-      const pincode = document.getElementById("pincode").value.trim();
-      const location = document.getElementById("location").value.trim();
-      const photoInput = document.getElementById("photo");
+    const complaint = JSON.parse(localStorage.getItem('latestComplaint'));
 
-      if (!title) {
-        alert("Title required");
-        return;
-      }
+    if (complaint) {
+      document.getElementById('complaintTitle').innerText = complaint.title;
+      document.getElementById('complaintCategory').innerText = complaint.category;
+      document.getElementById('complaintDesc').innerText = complaint.description;
+      document.getElementById('complaintLoc').innerText = complaint.location;
+      document.getElementById('complaintPincode').innerText = complaint.pincode;
 
-      if (photoInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function () {
-          showThankYou(reader.result);
-        };
-        reader.readAsDataURL(photoInput.files[0]);
+      const img = document.getElementById('complaintImg');
+      if (complaint.photo) {
+        img.src = complaint.photo;
+        img.style.display = 'block';
       } else {
-        showThankYou("");
+        img.style.display = 'none';
       }
-    }
-
-    function showThankYou(photoData) {
-      const formBox = document.getElementById("form-box");
-      const thankyouBox = document.getElementById("thankyou-box");
-      const submittedData = document.getElementById("submitted-data");
-
-      formBox.style.display = "none";
-      thankyouBox.style.display = "block";
-
-      submittedData.innerHTML = `
-        <p><strong>Title:</strong> ${document.getElementById("title").value}</p>
-        <p><strong>Category:</strong> ${document.getElementById("category").value}</p>
-        <p><strong>Description:</strong> ${document.getElementById("description").value}</p>
-        <p><strong>Pincode:</strong> ${document.getElementById("pincode").value}</p>
-        <p><strong>Location:</strong> ${document.getElementById("location").value}</p>
-        ${photoData ? '<p><strong>Photo:</strong></p><img src="' + photoData + '">' : ''}
-      `;
-    }
-
-    function goBack() {
-      document.getElementById("form-box").style.display = "block";
-      document.getElementById("thankyou-box").style.display = "none";
-
-      // Reset form
-      document.getElementById("title").value = "";
-      document.getElementById("category").selectedIndex = 0;
-      document.getElementById("description").value = "";
-      document.getElementById("pincode").value = "";
-      document.getElementById("location").value = "";
-      document.getElementById("photo").value = "";
+    } else {
+      document.body.innerHTML = "<h1>No complaint data found!</h1>";
     }
   </script>
 </body>
