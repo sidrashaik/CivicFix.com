@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Register Complaint | CivicFix</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -19,7 +18,7 @@
       padding: 30px;
       border-radius: 12px;
       width: 90%;
-      max-width: 450px;
+      max-width: 500px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     }
     input, textarea, select, button {
@@ -34,11 +33,15 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    img {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
   </style>
 </head>
-
 <body>
-  <div class="box">
+  <div class="box" id="form-box">
     <h2>Register Complaint</h2>
 
     <input id="title" placeholder="Complaint Title" required>
@@ -56,13 +59,19 @@
     <button onclick="submitComplaint()">Submit</button>
   </div>
 
+  <div class="box" id="thankyou-box" style="display:none;">
+    <h2>Complaint Submitted Successfully!</h2>
+    <div id="submitted-data"></div>
+    <button onclick="goBack()">Submit Another Complaint</button>
+  </div>
+
   <script>
     function submitComplaint() {
-      const title = document.getElementById("title").value;
+      const title = document.getElementById("title").value.trim();
       const category = document.getElementById("category").value;
-      const description = document.getElementById("description").value;
-      const pincode = document.getElementById("pincode").value;
-      const location = document.getElementById("location").value;
+      const description = document.getElementById("description").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+      const location = document.getElementById("location").value.trim();
       const photoInput = document.getElementById("photo");
 
       if (!title) {
@@ -73,22 +82,43 @@
       if (photoInput.files[0]) {
         const reader = new FileReader();
         reader.onload = function () {
-          redirect(reader.result);
+          showThankYou(reader.result);
         };
         reader.readAsDataURL(photoInput.files[0]);
       } else {
-        redirect("");
+        showThankYou("");
       }
+    }
 
-      function redirect(photo) {
-        window.location.href =
-          `thankyou.html?title=${encodeURIComponent(title)}
-          &category=${encodeURIComponent(category)}
-          &desc=${encodeURIComponent(description)}
-          &pincode=${encodeURIComponent(pincode)}
-          &location=${encodeURIComponent(location)}
-          &photo=${encodeURIComponent(photo)}`;
-      }
+    function showThankYou(photoData) {
+      const formBox = document.getElementById("form-box");
+      const thankyouBox = document.getElementById("thankyou-box");
+      const submittedData = document.getElementById("submitted-data");
+
+      formBox.style.display = "none";
+      thankyouBox.style.display = "block";
+
+      submittedData.innerHTML = `
+        <p><strong>Title:</strong> ${document.getElementById("title").value}</p>
+        <p><strong>Category:</strong> ${document.getElementById("category").value}</p>
+        <p><strong>Description:</strong> ${document.getElementById("description").value}</p>
+        <p><strong>Pincode:</strong> ${document.getElementById("pincode").value}</p>
+        <p><strong>Location:</strong> ${document.getElementById("location").value}</p>
+        ${photoData ? '<p><strong>Photo:</strong></p><img src="' + photoData + '">' : ''}
+      `;
+    }
+
+    function goBack() {
+      document.getElementById("form-box").style.display = "block";
+      document.getElementById("thankyou-box").style.display = "none";
+
+      // Reset form
+      document.getElementById("title").value = "";
+      document.getElementById("category").selectedIndex = 0;
+      document.getElementById("description").value = "";
+      document.getElementById("pincode").value = "";
+      document.getElementById("location").value = "";
+      document.getElementById("photo").value = "";
     }
   </script>
 </body>
