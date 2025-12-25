@@ -176,7 +176,9 @@
           localStorage.setItem('complaints', JSON.stringify(complaints));
           alert("Complaint submitted successfully!");
           // Save the last submitted complaint to show on thankyou page
-          localStorage.setItem('lastComplaint', JSON.stringify(complaints[complaints.length-1]));
+     localStorage.setItem('latestComplaint', JSON.stringify(complaints[complaints.length-1]));
+
+
           window.location.href = 'citizen-thankyou.html';
         };
         reader.readAsDataURL(photoInput.files[0]);
@@ -202,3 +204,4 @@
   </script>
 </body>
 </html>
+
