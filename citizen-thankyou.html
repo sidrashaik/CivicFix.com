@@ -4,56 +4,86 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You | CivicFix</title>
+
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      background: #f7f8fc; 
-      margin: 0; 
-      display: flex; 
-      flex-direction: column; 
-      min-height: 100vh; 
-      justify-content: center; 
-      align-items: center; 
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f8fc;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
-    .container { 
-      background: white; 
-      padding: 40px; 
-      border-radius: 12px; 
-      text-align: center; 
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1); 
-      max-width: 500px; 
-      width: 90%; 
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 90%;
     }
-    h1 { color: #333; }
-    p { font-size: 18px; margin: 10px 0; }
-    img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
-    .detail { text-align: left; margin-top: 20px; background: #f0f0f0; padding: 15px; border-radius: 8px; }
-    .detail p { margin: 5px 0; font-weight: bold; }
-    a { 
-      display: inline-block; 
-      margin-top: 20px; 
-      text-decoration: none; 
-      padding: 10px 20px; 
-      background: #514f52; 
-      color: white; 
-      border-radius: 8px; 
+
+    h1 {
+      color: #333;
     }
-    a:hover { background: #333; }
+
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .detail {
+      text-align: left;
+      margin-top: 20px;
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .detail p {
+      margin: 6px 0;
+      font-weight: bold;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      padding: 10px 20px;
+      background: #514f52;
+      color: white;
+      border-radius: 8px;
+    }
+
+    a:hover {
+      background: #333;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Thank You for Complaining!</h1>
     <p>Your complaint has been registered successfully.</p>
-    <p>Your issue will be addressed soon.</p>
-    <img id="complaintImg" src="" alt="Uploaded Complaint Photo">
-    
+
+    <img id="complaintImg" alt="Uploaded Complaint Photo">
+
     <div class="detail">
-      <p><strong>Title:</strong> <span id="complaintTitle"></span></p>
-      <p><strong>Category:</strong> <span id="complaintCategory"></span></p>
-      <p><strong>Description:</strong> <span id="complaintDesc"></span></p>
-      <p><strong>Pincode:</strong> <span id="complaintPincode"></span></p>
-      <p><strong>Location:</strong> <span id="complaintLoc"></span></p>
+      <p>Title: <span id="complaintTitle"></span></p>
+      <p>Category: <span id="complaintCategory"></span></p>
+      <p>Description: <span id="complaintDesc"></span></p>
+      <p>Location: <span id="complaintLoc"></span></p>
+      <p>Pincode: <span id="complaintPincode"></span></p>
     </div>
 
     <a href="citizen-dashboard.html">Register Another Complaint</a>
@@ -61,9 +91,14 @@
   </div>
 
   <script>
-    const complaint = JSON.parse(localStorage.getItem('latestComplaint'));
+    window.onload = function () {
+      const complaint = JSON.parse(localStorage.getItem('latestComplaint'));
 
-    if (complaint) {
+      if (!complaint) {
+        alert("No complaint data found. Please submit again.");
+        return;
+      }
+
       document.getElementById('complaintTitle').innerText = complaint.title;
       document.getElementById('complaintCategory').innerText = complaint.category;
       document.getElementById('complaintDesc').innerText = complaint.description;
@@ -73,13 +108,9 @@
       const img = document.getElementById('complaintImg');
       if (complaint.photo) {
         img.src = complaint.photo;
-        img.style.display = 'block';
-      } else {
-        img.style.display = 'none';
+        img.style.display = "block";
       }
-    } else {
-      document.body.innerHTML = "<h1>No complaint data found!</h1>";
-    }
+    };
   </script>
 </body>
 </html>
